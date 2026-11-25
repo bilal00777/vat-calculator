@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5% VAT Calculator</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f2f4f8; display: flex; justify-content: center; padding: 40px 16px; }
+  .card { background: #fff; width: 100%; max-width: 380px; padding: 24px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+  h2 { margin: 0 0 16px; text-align: center; }
+  label { font-size: 14px; color: #555; }
+  input { width: 100%; box-sizing: border-box; padding: 12px; font-size: 18px; margin: 6px 0 16px; border: 1px solid #ccc; border-radius: 8px; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-top: 1px solid #eee; }
+  .row span { font-size: 14px; color: #555; }
+  .row strong { font-size: 18px; }
+  button { padding: 6px 12px; border: none; border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer; margin-left: 8px; }
+  button:hover { background: #1d4ed8; }
+  .copyall { width: 100%; margin: 16px 0 0; padding: 12px; font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>5% VAT Calculator</h2>
+  <label for="amount">Enter amount</label>
+  <input type="number" id="amount" placeholder="0.00" min="0" step="any" oninput="calc()">
+
+  <div class="row">
+    <span>VAT (5%)</span>
+    <div><strong id="vat">0.00</strong><button onclick="copyText('vat', this)">Copy</button></div>
+  </div>
+  <div class="row">
+    <span>Total (with VAT)</span>
+    <div><strong id="total">0.00</strong><button onclick="copyText('total', this)">Copy</button></div>
+  </div>
+
+  <button class="copyall" onclick="copyAll(this)">Copy All</button>
+</div>
+
+<script>
+  const RATE = 0.05;
+
+  function calc() {
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const vat = amount * RATE;
+    document.getElementById('vat').textContent = vat.toFixed(2);
+    document.getElementById('total').textContent = (amount + vat).toFixed(2);
+  }
+
+  function flash(btn, original) {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = original, 1200);
+  }
+
+  function copyText(id, btn) {
+    const original = btn.textContent;
+    navigator.clipboard.writeText(document.getElementById(id).textContent)
+      .then(() => flash(btn, original));
+  }
+
+  function copyAll(btn) {
+    const original = btn.textContent;
+    const amount = (parseFloat(document.getElementById('amount').value) || 0).toFixed(2);
+    const text = `Amount: ${amount}\nVAT (5%): ${document.getElementById('vat').textContent}\nTotal: ${document.getElementById('total').textContent}`;
+    navigator.clipboard.writeText(text).then(() => flash(btn, original));
+  }
+</script>
+</body>
+</html>
